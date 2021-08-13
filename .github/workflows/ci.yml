@@ -14,4 +14,3 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: linux
         goarch: amd64
-        pre_command: "CGO_ENABLED=0"
