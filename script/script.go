@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func UsedRam(soft string) float64 {
+func UsedMemory(soft string) float64 {
 	commande := "echo $(ps aux | grep \"" + soft + "\"| grep -v grep | awk 'BEGIN { sum=0 } {sum=sum+$6; } END {printf(\"%s\",sum / 1024)}')"
 	cmd, err := exec.Command("bash", "-c", commande).Output()
 	if err != nil {

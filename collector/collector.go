@@ -6,13 +6,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-type RamCollector struct {
-	PHPRam    *prometheus.Desc
-	ApacheRam *prometheus.Desc
-	NPMRam    *prometheus.Desc
-	JavaRam   *prometheus.Desc
-	RedisRam  *prometheus.Desc
-	NodeRam   *prometheus.Desc
+type MemoryCollector struct {
+	ApacheMemory *prometheus.Desc
+	JavaMemory   *prometheus.Desc
+	NodeMemory   *prometheus.Desc
+	NPMMemory    *prometheus.Desc
+	PHPMemory    *prometheus.Desc
+	RedisMemory  *prometheus.Desc
 }
 
 var (
@@ -24,51 +24,51 @@ var (
 		"bin/apache"}
 )
 
-func NewwRamCollector() *RamCollector {
-	return &RamCollector{
-		PHPRam: prometheus.NewDesc("php_ram",
-			"Shows the RAM used by PHP",
+func NewMemoryCollector() *MemoryCollector {
+	return &MemoryCollector{
+		ApacheMemory: prometheus.NewDesc("ethersys_pod_apache_memstats",
+			"Shows the Memory used by Apache ",
 			nil, nil,
 		),
-		ApacheRam: prometheus.NewDesc("apache_ram",
-			"Shows the RAM used by Apache ",
+		JavaMemory: prometheus.NewDesc("ethersys_pod_java_memstats",
+			"Shows the Memory used by Java",
 			nil, nil,
 		),
-		NPMRam: prometheus.NewDesc("npm_ram",
-			"Shows the RAM used by NPM",
+		NodeMemory: prometheus.NewDesc("ethersys_pod_node_memstats",
+			"Shows the Memory used by Node",
 			nil, nil,
 		),
-		JavaRam: prometheus.NewDesc("java_ram",
-			"Shows the RAM used by Java",
+		NPMMemory: prometheus.NewDesc("ethersys_pod_npm_memstats",
+			"Shows the Memory used by NPM",
 			nil, nil,
 		),
-		RedisRam: prometheus.NewDesc("redis_ram",
-			"Shows the RAM used by Redis",
+		PHPMemory: prometheus.NewDesc("ethersys_pod_php_memstats",
+			"Shows the Memory used by PHP",
 			nil, nil,
 		),
-		NodeRam: prometheus.NewDesc("node_ram",
-			"Shows the RAM used by Node",
+		RedisMemory: prometheus.NewDesc("ethersys_pod_redis_memstats",
+			"Shows the Memory used by Redis",
 			nil, nil,
 		),
 	}
 }
 
-func (collector *RamCollector) Describe(ch chan<- *prometheus.Desc) {
+func (collector *MemoryCollector) Describe(ch chan<- *prometheus.Desc) {
 
-	ch <- collector.PHPRam
-	ch <- collector.ApacheRam
-	ch <- collector.NPMRam
-	ch <- collector.JavaRam
-	ch <- collector.NodeRam
-	ch <- collector.RedisRam
+	ch <- collector.ApacheMemory
+	ch <- collector.JavaMemory
+	ch <- collector.NodeMemory
+	ch <- collector.NPMMemory
+	ch <- collector.PHPMemory
+	ch <- collector.RedisMemory
 }
 
-func (collector *RamCollector) Collect(ch chan<- prometheus.Metric) {
+func (collector *MemoryCollector) Collect(ch chan<- prometheus.Metric) {
 
-	ch <- prometheus.MustNewConstMetric(collector.PHPRam, prometheus.CounterValue, script.UsedRam(programmeList[0]))
-	ch <- prometheus.MustNewConstMetric(collector.ApacheRam, prometheus.CounterValue, script.UsedRam(programmeList[1]))
-	ch <- prometheus.MustNewConstMetric(collector.NPMRam, prometheus.CounterValue, script.UsedRam(programmeList[2]))
-	ch <- prometheus.MustNewConstMetric(collector.JavaRam, prometheus.CounterValue, script.UsedRam(programmeList[3]))
-	ch <- prometheus.MustNewConstMetric(collector.RedisRam, prometheus.CounterValue, script.UsedRam(programmeList[4]))
-	ch <- prometheus.MustNewConstMetric(collector.NodeRam, prometheus.CounterValue, script.UsedRam(programmeList[5]))
+	ch <- prometheus.MustNewConstMetric(collector.ApacheMemory, prometheus.CounterValue, script.UsedMemory(programmeList[0]))
+	ch <- prometheus.MustNewConstMetric(collector.JavaMemory, prometheus.CounterValue, script.UsedMemory(programmeList[1]))
+	ch <- prometheus.MustNewConstMetric(collector.NodeMemory, prometheus.CounterValue, script.UsedMemory(programmeList[2]))
+	ch <- prometheus.MustNewConstMetric(collector.NPMMemory, prometheus.CounterValue, script.UsedMemory(programmeList[3]))
+	ch <- prometheus.MustNewConstMetric(collector.PHPMemory, prometheus.CounterValue, script.UsedMemory(programmeList[4]))
+	ch <- prometheus.MustNewConstMetric(collector.RedisMemory, prometheus.CounterValue, script.UsedMemory(programmeList[5]))
 }
