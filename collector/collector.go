@@ -16,12 +16,13 @@ type MemoryCollector struct {
 }
 
 var (
-	programmeList = [6]string{"bin/php",
+	programmeList = [6]string{
+		"bin/apache",
+		"bin/java",
 		"node ",
 		"npm ",
-		"bin/java",
-		"redis-server",
-		"bin/apache"}
+		"bin/php",
+		"redis-server"}
 )
 
 func NewMemoryCollector() *MemoryCollector {
