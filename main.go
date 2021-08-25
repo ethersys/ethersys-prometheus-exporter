@@ -54,7 +54,7 @@ func main() {
 		enableAuth = true
 	}
 
-	foo := collector.NewMemoryCollector()
+	foo := collector.NewRessourcesCollector()
 	prometheus.MustRegister(foo)
 	listen := IP + ":" + PORT
 
