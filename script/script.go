@@ -20,13 +20,16 @@ func ProcessFilter(processname string) ([]*process.Process, error) {
 func UsedMemory(soft string) float64 {
 	var ret float64 = 0
 	var val float64
+	var err error
 	var memoryMapsStats *[]process.MemoryMapsStat
 	processes, _ := ProcessFilter(soft)
 	for _, proc := range processes {
-		memoryMapsStats, _ = proc.MemoryMaps(true)
-		for _, memoryMapsStat := range *memoryMapsStats {
-			val = float64(memoryMapsStat.Rss)
-			ret += val / 1024
+		memoryMapsStats, err = proc.MemoryMaps(true)
+		if err == nil {
+			for _, memoryMapsStat := range *memoryMapsStats {
+				val = float64(memoryMapsStat.Rss)
+				ret += val / 1024
+			}
 		}
 	}
 	return ret
