@@ -2,27 +2,28 @@ package collector
 
 import (
 	"exporter/script"
-
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 type RessourcesCollector struct {
-	ApacheMemory *prometheus.Desc
-	ApacheCPU 	 *prometheus.Desc
-	JavaMemory   *prometheus.Desc
-	JavaCPU   	 *prometheus.Desc
-	NodeMemory   *prometheus.Desc
-	NodeCPU      *prometheus.Desc
-	NPMMemory    *prometheus.Desc
-	NPMCPU      *prometheus.Desc
-	PHPMemory    *prometheus.Desc
-	PHPCPU       *prometheus.Desc
-	RedisMemory  *prometheus.Desc
-	RedisCPU     *prometheus.Desc
+	UnmonitoredMemory   *prometheus.Desc
+	UnmonitoredCPU      *prometheus.Desc
+	ApacheMemory        *prometheus.Desc
+	ApacheCPU           *prometheus.Desc
+	JavaMemory          *prometheus.Desc
+	JavaCPU             *prometheus.Desc
+	NodeMemory          *prometheus.Desc
+	NodeCPU             *prometheus.Desc
+	NPMMemory           *prometheus.Desc
+	NPMCPU              *prometheus.Desc
+	PHPMemory           *prometheus.Desc
+	PHPCPU              *prometheus.Desc
+	RedisMemory         *prometheus.Desc
+	RedisCPU            *prometheus.Desc
 }
 
 var (
-	programmeList = [6]string{
+	programmeList = []string{
 		"bin/apache",
 		"bin/java",
 		"node ",
@@ -33,6 +34,14 @@ var (
 
 func NewRessourcesCollector() *RessourcesCollector {
 	return &RessourcesCollector{
+		UnmonitoredMemory: prometheus.NewDesc("ethersys_pod_unmonitored_memstats",
+			"Shows the Memory used by unmonitored process",
+			nil, nil,
+		),
+		UnmonitoredCPU: prometheus.NewDesc("ethersys_pod_unmonitored_cpustats",
+			"Shows CPU usage by unmonitored process",
+			nil, nil,
+		),
 		ApacheMemory: prometheus.NewDesc("ethersys_pod_apache_memstats",
 			"Shows the Memory used by Apache ",
 			nil, nil,
@@ -86,6 +95,8 @@ func NewRessourcesCollector() *RessourcesCollector {
 
 func (collector *RessourcesCollector) Describe(ch chan<- *prometheus.Desc) {
 
+	ch <- collector.UnmonitoredMemory
+	ch <- collector.UnmonitoredCPU
 	ch <- collector.ApacheMemory
 	ch <- collector.ApacheCPU
 	ch <- collector.JavaMemory
@@ -102,6 +113,8 @@ func (collector *RessourcesCollector) Describe(ch chan<- *prometheus.Desc) {
 
 func (collector *RessourcesCollector) Collect(ch chan<- prometheus.Metric) {
 
+	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredMemory, prometheus.CounterValue, script.UnmonitoredMemory(programmeList))
+	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredCPU, prometheus.CounterValue, script.UnmonitoredCPU(programmeList))
 	ch <- prometheus.MustNewConstMetric(collector.ApacheMemory, prometheus.CounterValue, script.UsedMemory(programmeList[0]))
 	ch <- prometheus.MustNewConstMetric(collector.ApacheCPU, prometheus.CounterValue, script.UsedCPU(programmeList[0]))
 	ch <- prometheus.MustNewConstMetric(collector.JavaMemory, prometheus.CounterValue, script.UsedMemory(programmeList[1]))
