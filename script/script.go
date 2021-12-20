@@ -67,12 +67,16 @@ func UsedCPU(soft string) float64 {
 	return ret
 }
 
-func UnmonitoredMemory(processesList []string) float64 {
+func UnmonitoredMemory(programs map[string]string) float64 {
 	var ret float64 = 0
 	var val float64
 	var err error
 	var memoryMapsStats *[]process.MemoryMapsStat
-	processes, _ := ProcessesExcludeFilter(processesList)
+	var to_exclude []string
+	for  _, program := range programs {
+		to_exclude = append(to_exclude, program)
+	}
+	processes, _ := ProcessesExcludeFilter(to_exclude)
 	for _, proc := range processes {
 		memoryMapsStats, err = proc.MemoryMaps(true)
 		if err == nil {
@@ -85,10 +89,14 @@ func UnmonitoredMemory(processesList []string) float64 {
 	return ret
 }
 
-func UnmonitoredCPU(processesList []string) float64 {
+func UnmonitoredCPU(programs map[string]string) float64 {
 	var ret float64 = 0
 	var val float64
-	processes, _ := ProcessesExcludeFilter(processesList)
+	var to_exclude []string
+	for  _, program := range programs {
+		to_exclude = append(to_exclude, program)
+	}
+	processes, _ := ProcessesExcludeFilter(to_exclude)
 	for _, proc := range processes {
 		val, _ = proc.CPUPercent()
 		ret += val

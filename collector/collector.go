@@ -29,16 +29,16 @@ type RessourcesCollector struct {
 }
 
 var (
-	programmeList = []string{
-		"bin/apache ",
-		"bin/java ",
-		"node ",
-		"npm ",
-		"bin/php ",
-		"bin/php-cgi",
-		"bin/python ",
-		"redis-server ",
-		"gunicorn"}
+	programs = map[string]string{
+		"apache": "bin/apache ",
+		"java": "bin/java ",
+		"node": "node ",
+		"npm": "npm ",
+		"php": "bin/php ",
+		"phpcgi": "bin/php-cgi",
+		"python": "bin/python ",
+		"redis": "redis-server ",
+		"gunicorn": "gunicorn"}
 )
 
 func NewRessourcesCollector() *RessourcesCollector {
@@ -150,24 +150,24 @@ func (collector *RessourcesCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (collector *RessourcesCollector) Collect(ch chan<- prometheus.Metric) {
-	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredMemory, prometheus.CounterValue, script.UnmonitoredMemory(programmeList))
-	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredCPU, prometheus.CounterValue, script.UnmonitoredCPU(programmeList))
-	ch <- prometheus.MustNewConstMetric(collector.ApacheMemory, prometheus.CounterValue, script.UsedMemory(programmeList[0]))
-	ch <- prometheus.MustNewConstMetric(collector.ApacheCPU, prometheus.CounterValue, script.UsedCPU(programmeList[0]))
-	ch <- prometheus.MustNewConstMetric(collector.JavaMemory, prometheus.CounterValue, script.UsedMemory(programmeList[1]))
-	ch <- prometheus.MustNewConstMetric(collector.JavaCPU, prometheus.CounterValue, script.UsedCPU(programmeList[1]))
-	ch <- prometheus.MustNewConstMetric(collector.NodeMemory, prometheus.CounterValue, script.UsedMemory(programmeList[2]))
-	ch <- prometheus.MustNewConstMetric(collector.NodeCPU, prometheus.CounterValue, script.UsedCPU(programmeList[2]))
-	ch <- prometheus.MustNewConstMetric(collector.NPMMemory, prometheus.CounterValue, script.UsedMemory(programmeList[3]))
-	ch <- prometheus.MustNewConstMetric(collector.NPMCPU, prometheus.CounterValue, script.UsedCPU(programmeList[3]))
-	ch <- prometheus.MustNewConstMetric(collector.PHPMemory, prometheus.CounterValue, script.UsedMemory(programmeList[4]))
-	ch <- prometheus.MustNewConstMetric(collector.PHPCPU, prometheus.CounterValue, script.UsedCPU(programmeList[4]))
-	ch <- prometheus.MustNewConstMetric(collector.PHPCGIMemory, prometheus.CounterValue, script.UsedMemory(programmeList[5]))
-	ch <- prometheus.MustNewConstMetric(collector.PHPCGICPU, prometheus.CounterValue, script.UsedCPU(programmeList[5]))
-	ch <- prometheus.MustNewConstMetric(collector.PythonMemory, prometheus.CounterValue, script.UsedMemory(programmeList[6]))
-	ch <- prometheus.MustNewConstMetric(collector.PythonCPU, prometheus.CounterValue, script.UsedCPU(programmeList[6]))
-	ch <- prometheus.MustNewConstMetric(collector.RedisMemory, prometheus.CounterValue, script.UsedMemory(programmeList[7]))
-	ch <- prometheus.MustNewConstMetric(collector.RedisCPU, prometheus.CounterValue, script.UsedCPU(programmeList[7]))
-	ch <- prometheus.MustNewConstMetric(collector.GunicornMemory, prometheus.CounterValue, script.UsedMemory(programmeList[8]))
-	ch <- prometheus.MustNewConstMetric(collector.GunicornCPU, prometheus.CounterValue, script.UsedCPU(programmeList[8]))
+	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredMemory, prometheus.CounterValue, script.UnmonitoredMemory(programs))
+	ch <- prometheus.MustNewConstMetric(collector.UnmonitoredCPU, prometheus.CounterValue, script.UnmonitoredCPU(programs))
+	ch <- prometheus.MustNewConstMetric(collector.ApacheMemory, prometheus.CounterValue, script.UsedMemory(programs["apache"]))
+	ch <- prometheus.MustNewConstMetric(collector.ApacheCPU, prometheus.CounterValue, script.UsedCPU(programs["apache"]))
+	ch <- prometheus.MustNewConstMetric(collector.JavaMemory, prometheus.CounterValue, script.UsedMemory(programs["java"]))
+	ch <- prometheus.MustNewConstMetric(collector.JavaCPU, prometheus.CounterValue, script.UsedCPU(programs["java"]))
+	ch <- prometheus.MustNewConstMetric(collector.NodeMemory, prometheus.CounterValue, script.UsedMemory(programs["node"]))
+	ch <- prometheus.MustNewConstMetric(collector.NodeCPU, prometheus.CounterValue, script.UsedCPU(programs["node"]))
+	ch <- prometheus.MustNewConstMetric(collector.NPMMemory, prometheus.CounterValue, script.UsedMemory(programs["npm"]))
+	ch <- prometheus.MustNewConstMetric(collector.NPMCPU, prometheus.CounterValue, script.UsedCPU(programs["npm"]))
+	ch <- prometheus.MustNewConstMetric(collector.PHPMemory, prometheus.CounterValue, script.UsedMemory(programs["php"]))
+	ch <- prometheus.MustNewConstMetric(collector.PHPCPU, prometheus.CounterValue, script.UsedCPU(programs["php"]))
+	ch <- prometheus.MustNewConstMetric(collector.PHPCGIMemory, prometheus.CounterValue, script.UsedMemory(programs["phpcgi"]))
+	ch <- prometheus.MustNewConstMetric(collector.PHPCGICPU, prometheus.CounterValue, script.UsedCPU(programs["phpcgi"]))
+	ch <- prometheus.MustNewConstMetric(collector.PythonMemory, prometheus.CounterValue, script.UsedMemory(programs["python"]))
+	ch <- prometheus.MustNewConstMetric(collector.PythonCPU, prometheus.CounterValue, script.UsedCPU(programs["python"]))
+	ch <- prometheus.MustNewConstMetric(collector.RedisMemory, prometheus.CounterValue, script.UsedMemory(programs["redis"]))
+	ch <- prometheus.MustNewConstMetric(collector.RedisCPU, prometheus.CounterValue, script.UsedCPU(programs["redis"]))
+	ch <- prometheus.MustNewConstMetric(collector.GunicornMemory, prometheus.CounterValue, script.UsedMemory(programs["gunicorn"]))
+	ch <- prometheus.MustNewConstMetric(collector.GunicornCPU, prometheus.CounterValue, script.UsedCPU(programs["gunicorn"]))
 }
