@@ -24,8 +24,12 @@ type RessourcesCollector struct {
 	PythonCPU           *prometheus.Desc
 	RedisMemory         *prometheus.Desc
 	RedisCPU            *prometheus.Desc
-	GunicornMemory         *prometheus.Desc
-	GunicornCPU            *prometheus.Desc
+	GunicornMemory      *prometheus.Desc
+	GunicornCPU         *prometheus.Desc
+	VarnishMemory       *prometheus.Desc
+	VarnishCPU          *prometheus.Desc
+	UwsgiMemory         *prometheus.Desc
+	UwsgiCPU            *prometheus.Desc
 }
 
 var (
@@ -38,7 +42,9 @@ var (
 		"phpcgi": "bin/php-cgi",
 		"python": "bin/python ",
 		"redis": "redis-server ",
-		"gunicorn": "gunicorn"}
+		"gunicorn": "gunicorn",
+		"varnish": "varnishd ",
+		"uwsgi": "uwsgi" }
 )
 
 func NewRessourcesCollector() *RessourcesCollector {
@@ -123,6 +129,22 @@ func NewRessourcesCollector() *RessourcesCollector {
 			"Shows CPU usage by Gunicorn",
 			nil, nil,
 		),
+		VarnishMemory: prometheus.NewDesc("ethersys_pod_varnish_memstats",
+			"Shows the Memory used by Varnish",
+			nil, nil,
+		),
+		VarnishCPU: prometheus.NewDesc("ethersys_pod_varnish_cpustats",
+			"Shows CPU usage by Varnish",
+			nil, nil,
+		),
+		UwsgiMemory: prometheus.NewDesc("ethersys_pod_uwsgi_memstats",
+			"Shows the Memory used by uWSGI",
+			nil, nil,
+		),
+		UwsgiCPU: prometheus.NewDesc("ethersys_pod_uwsgi_cpustats",
+			"Shows CPU usage by uWSGI",
+			nil, nil,
+		),
 	}
 }
 
@@ -147,6 +169,10 @@ func (collector *RessourcesCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.RedisCPU
 	ch <- collector.GunicornMemory
 	ch <- collector.GunicornCPU
+	ch <- collector.VarnishMemory
+	ch <- collector.VarnishCPU
+	ch <- collector.UwsgiMemory
+	ch <- collector.UwsgiCPU
 }
 
 func (collector *RessourcesCollector) Collect(ch chan<- prometheus.Metric) {
@@ -170,4 +196,8 @@ func (collector *RessourcesCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(collector.RedisCPU, prometheus.CounterValue, script.UsedCPU(programs["redis"]))
 	ch <- prometheus.MustNewConstMetric(collector.GunicornMemory, prometheus.CounterValue, script.UsedMemory(programs["gunicorn"]))
 	ch <- prometheus.MustNewConstMetric(collector.GunicornCPU, prometheus.CounterValue, script.UsedCPU(programs["gunicorn"]))
+	ch <- prometheus.MustNewConstMetric(collector.VarnishMemory, prometheus.CounterValue, script.UsedMemory(programs["varnish"]))
+	ch <- prometheus.MustNewConstMetric(collector.VarnishCPU, prometheus.CounterValue, script.UsedCPU(programs["varnish"]))
+	ch <- prometheus.MustNewConstMetric(collector.UwsgiMemory, prometheus.CounterValue, script.UsedMemory(programs["uwsgi"]))
+	ch <- prometheus.MustNewConstMetric(collector.UwsgiCPU, prometheus.CounterValue, script.UsedCPU(programs["uwsgi"]))
 }
