@@ -19,5 +19,5 @@ echo $(htpasswd -bnBC 10 "" "<PASSWORD>" | tr -d ':\n' | sed 's/$2y/$2a/' | sed 
 ```bash
 git clone git@github.com:ethersys/ethersys-ansible-public.git
 go install
-go build
+CGO_ENABLED=0 go build
 ```
